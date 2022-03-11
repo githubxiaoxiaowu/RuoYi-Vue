@@ -1,19 +1,34 @@
 package com.ruoyi.common.utils;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.ruoyi.common.constant.HttpStatus;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.exception.ServiceException;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
 
 /**
  * 安全服务工具类
  * 
  * @author ruoyi
  */
+@Component
 public class SecurityUtils
 {
+    @Value("${spring.profiles.active}")
+    private String active;
+
+    private static  SecurityUtils securityUtils;
+    @PostConstruct
+    private void init() {
+        securityUtils = this;
+        securityUtils.active = this.active;
+    }
+
     /**
      * 用户ID
      **/
@@ -25,7 +40,11 @@ public class SecurityUtils
         }
         catch (Exception e)
         {
-            throw new ServiceException("获取用户ID异常", HttpStatus.UNAUTHORIZED);
+            if(!"dev".equals(securityUtils.active)){
+                throw new ServiceException("获取用户ID异常", HttpStatus.UNAUTHORIZED);
+            }
+            return 1L;
+
         }
     }
 

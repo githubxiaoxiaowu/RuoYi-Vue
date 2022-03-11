@@ -3,6 +3,11 @@ package com.ruoyi.web.controller.system;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -32,6 +37,7 @@ import com.ruoyi.system.service.ISysDictTypeService;
  */
 @RestController
 @RequestMapping("/system/dict/data")
+@Api(value="字典数据管理",tags = {"字典数据管理"})
 public class SysDictDataController extends BaseController
 {
     @Autowired
@@ -73,6 +79,10 @@ public class SysDictDataController extends BaseController
      * 根据字典类型查询字典数据信息
      */
     @GetMapping(value = "/type/{dictType}")
+    @ApiOperation(value = "根据字典类型查询字典数据信息",response = SysDictData.class,notes = "查询某个type下的字典数据")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType="header",name="Authorization",dataType="String",required=true,value="token",defaultValue="Bearer xxxxx"),
+    })
     public AjaxResult dictType(@PathVariable String dictType)
     {
         List<SysDictData> data = dictTypeService.selectDictDataByType(dictType);

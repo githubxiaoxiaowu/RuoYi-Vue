@@ -36,10 +36,31 @@
         </dependency>
 
         <!-- pagehelper 分页插件 -->
-        <dependency>
+       <!-- <dependency>
             <groupId>com.github.pagehelper</groupId>
             <artifactId>pagehelper-spring-boot-starter</artifactId>
+
+        </dependency>-->
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper</artifactId>
+            <version>5.3.0</version>
         </dependency>
+
+      <!--  &lt;!&ndash; mybatis 1 &ndash;&gt;
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>${mybatis-plus-boot-starter.version}</version>
+        </dependency>-->
+
+        <!-- https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-boot-starter -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>3.3.0</version>
+        </dependency>
+
 
         <!-- 自定义验证注解 -->
         <dependency>

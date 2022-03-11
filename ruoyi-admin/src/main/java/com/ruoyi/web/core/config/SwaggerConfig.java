@@ -10,14 +10,11 @@ import com.ruoyi.common.config.RuoYiConfig;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.models.auth.In;
 import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.ApiKey;
-import springfox.documentation.service.AuthorizationScope;
-import springfox.documentation.service.Contact;
-import springfox.documentation.service.SecurityReference;
-import springfox.documentation.service.SecurityScheme;
+import springfox.documentation.schema.ModelRef;
+import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
@@ -48,8 +45,8 @@ public class SwaggerConfig
     @Bean
     public Docket createRestApi()
     {
-        return new Docket(DocumentationType.OAS_30)
-                // 是否启用Swagger
+        return new Docket(DocumentationType.SWAGGER_2)
+               // // 是否启用Swagger
                 .enable(enabled)
                 // 用来创建该API的基本信息，展示在文档的页面中（自定义展示的信息）
                 .apiInfo(apiInfo())
@@ -62,10 +59,21 @@ public class SwaggerConfig
                 // 扫描所有 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
                 .build()
+                .globalOperationParameters(defaultHeader())
                 /* 设置安全模式，swagger可以设置访问token */
-                .securitySchemes(securitySchemes())
-                .securityContexts(securityContexts())
+             //   .securitySchemes(securitySchemes())
+             //   .securityContexts(securityContexts())
                 .pathMapping(pathMapping);
+    }
+
+
+    private static List<Parameter> defaultHeader(){
+        ParameterBuilder appType = new ParameterBuilder();
+        ParameterBuilder appToken = new ParameterBuilder();
+        appToken.name("Authorization").description("令牌").modelRef(new ModelRef("string")).parameterType("header").required(false).build();
+        List<Parameter> pars = new ArrayList<>();
+        pars.add(appToken.build());
+        return pars;
     }
 
     /**
@@ -87,7 +95,7 @@ public class SwaggerConfig
         securityContexts.add(
                 SecurityContext.builder()
                         .securityReferences(defaultAuth())
-                        .operationSelector(o -> o.requestMappingPattern().matches("/.*"))
+                     //   .operationSelector(o -> o.requestMappingPattern().matches("/.*"))
                         .build());
         return securityContexts;
     }
@@ -113,7 +121,7 @@ public class SwaggerConfig
         // 用ApiInfoBuilder进行定制
         return new ApiInfoBuilder()
                 // 设置标题
-                .title("标题：若依管理系统_接口文档")
+                .title("标题：AR系统_接口文档")
                 // 描述
                 .description("描述：用于管理集团旗下公司的人员信息,具体包括XXX,XXX模块...")
                 // 作者信息

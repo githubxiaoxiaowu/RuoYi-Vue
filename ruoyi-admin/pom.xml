@@ -24,20 +24,52 @@
             <optional>true</optional> <!-- 表示依赖不会传递 -->
         </dependency>
 
-        <!-- swagger3-->
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>junit-jupiter</artifactId>
+                    <groupId>org.junit.jupiter</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>mockito-junit-jupiter</artifactId>
+                    <groupId>org.mockito</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+            <version>4.12</version>
+        </dependency>
+
+        <!-- swagger3-->
+     <!--   <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-boot-starter</artifactId>
         </dependency>
 
-        <!-- 防止进入swagger页面报类型转换错误，排除3.0.0中的引用，手动增加1.6.2版本 -->
+        &lt;!&ndash; 防止进入swagger页面报类型转换错误，排除3.0.0中的引用，手动增加1.6.2版本 &ndash;&gt;
         <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-models</artifactId>
             <version>1.6.2</version>
+        </dependency>-->
+
+
+        <!-- https://mvnrepository.com/artifact/com.github.xiaoymin/knife4j-spring-boot-starter -->
+        <dependency>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>knife4j-spring-boot-starter</artifactId>
+            <version>2.0.9</version>
         </dependency>
 
-         <!-- Mysql驱动包 -->
+
+
+        <!-- Mysql驱动包 -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -49,48 +81,138 @@
             <artifactId>ruoyi-framework</artifactId>
         </dependency>
 
-        <!-- 定时任务-->
+        <!-- 业务核心模块-->
         <dependency>
             <groupId>com.ruoyi</groupId>
-            <artifactId>ruoyi-quartz</artifactId>
+            <artifactId>ruoyi-armarket-core</artifactId>
+            <version>3.8.1</version>
         </dependency>
+
+        <!-- 定时任务-->
+       <!-- <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-quartz</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>mybatis-spring-boot-starter</artifactId>
+                    <groupId>org.mybatis.spring.boot</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>-->
 
         <!-- 代码生成-->
         <dependency>
             <groupId>com.ruoyi</groupId>
             <artifactId>ruoyi-generator</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>mybatis-spring-boot-starter</artifactId>
+                    <groupId>org.mybatis.spring.boot</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
-    </dependencies>
 
+        <dependency>
+            <groupId>redis.embedded</groupId>
+            <artifactId>embedded-redis</artifactId>
+            <version>0.5</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.8</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-generator</artifactId>
+            <version>3.3.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity-engine-core</artifactId>
+            <version>2.2</version>
+        </dependency>
+    </dependencies>
     <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>2.1.1.RELEASE</version>
-                <configuration>
-                    <fork>true</fork> <!-- 如果没有该配置，devtools不会生效 -->
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>   
-                <groupId>org.apache.maven.plugins</groupId>   
-                <artifactId>maven-war-plugin</artifactId>   
-                <version>3.1.0</version>   
-                <configuration>
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
-                    <warName>${project.artifactId}</warName>
-                </configuration>   
-           </plugin>   
-        </plugins>
-        <finalName>${project.artifactId}</finalName>
+        <filters> <!-- 指定 filter -->
+            <filter>src/main/conf/filters/application-${activatedProperties}.properties</filter>
+        </filters>
+        <!-- 分模块打包成zip -->
+            <plugins>
+                <plugin>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <configuration>
+                        <descriptors>
+                            <descriptor>release.xml</descriptor>
+                        </descriptors>
+                    </configuration>
+                </plugin>
+            </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <activatedProperties>dev</activatedProperties>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>${basedir}/src/main/resources</directory>
+                        <filtering>true</filtering> <!-- 是否使用过滤器 -->
+                        <excludes>
+                            <exclude>static/**</exclude>
+                        </excludes>
+                    </resource>
+                    <resource>
+                        <directory>${basedir}/src/main/resources</directory>
+                        <filtering>false</filtering> <!-- 是否使用过滤器 -->
+                        <includes>
+                            <include>static/**</include>
+                        </includes>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
+        <profile>
+            <id>test</id>
+            <properties>
+                <activatedProperties>test</activatedProperties>
+            </properties>
+
+            <build>
+                <resources>
+                    <resource>
+                        <directory>${basedir}/src/main/resources</directory>
+                        <filtering>true</filtering> <!-- 是否使用过滤器 -->
+                        <excludes>
+                            <exclude>static/**</exclude>
+                        </excludes>
+                        <targetPath>${project.build.directory}/conf</targetPath>
+
+                    </resource>
+                    <resource>
+                        <directory>${basedir}/src/main/resources</directory>
+                        <filtering>false</filtering> <!-- 是否使用过滤器 -->
+                        <includes>
+                            <include>static/**</include>
+                        </includes>
+                        <targetPath>${project.build.directory}/conf</targetPath>
+
+                    </resource>
+                </resources>
+            </build>
+        </profile>
+    </profiles>
 
 </project>

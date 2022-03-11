@@ -2,6 +2,9 @@ package com.ruoyi.web.controller.system;
 
 import java.util.List;
 import java.util.Set;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +26,7 @@ import com.ruoyi.system.service.ISysMenuService;
  * @author ruoyi
  */
 @RestController
+@Api(value="登录验证",tags = {"登录验证"})
 public class SysLoginController
 {
     @Autowired
@@ -41,6 +45,7 @@ public class SysLoginController
      * @return 结果
      */
     @PostMapping("/login")
+    @ApiOperation(value = "登陆请求",notes = "josn格式请求")
     public AjaxResult login(@RequestBody LoginBody loginBody)
     {
         AjaxResult ajax = AjaxResult.success();
@@ -57,6 +62,7 @@ public class SysLoginController
      * @return 用户信息
      */
     @GetMapping("getInfo")
+    @ApiOperation(value = "获取用户信息")
     public AjaxResult getInfo()
     {
         SysUser user = SecurityUtils.getLoginUser().getUser();
@@ -77,6 +83,7 @@ public class SysLoginController
      * @return 路由信息
      */
     @GetMapping("getRouters")
+    @ApiOperation(value = "获取路由菜单信息")
     public AjaxResult getRouters()
     {
         Long userId = SecurityUtils.getUserId();

@@ -339,4 +339,8 @@ public class SysUser extends BaseEntity
             .append("dept", getDept())
             .toString();
     }
+
+  /*  public boolean isAdmin(){
+       return  userId==1;
+    }*/
 }
